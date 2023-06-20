@@ -1,0 +1,17 @@
+.hover\:description:hover {
+    display: block;
+  }
+  
+  /* Optional styling for the description */
+  .description {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .bullet {
+    margin-right: 0.5em;
+    color: #000;
+  }
