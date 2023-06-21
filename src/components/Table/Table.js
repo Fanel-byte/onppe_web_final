@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {signalement} from "./TabDB";
 import ReactPaginate from 'react-paginate';
 import {Icon} from '@iconify/react';
+import {signalement} from './TabDB';
 import deleteOutlineIcon from '@iconify-icons/material-symbols/delete-outline';
 import editOutlineSharp from '@iconify-icons/material-symbols/edit-outline-sharp';
-import { useNavigate } from 'react-router-dom';
 
 function Table({
     fstate,
@@ -15,7 +14,7 @@ function Table({
     fdateto,
     nameSearch
 }) {
-    const navigate = useNavigate();
+    console.log(signalement);
 
     const [selectedRows,
         setSelectedRows] = useState([]);
@@ -46,13 +45,15 @@ function Table({
         });
     };
     const handleRowClick = (id, event) => {
-        // const pageid = signal.id;
-      const isCheckboxClicked = event.target.type === 'checkbox';
-      if (!isCheckboxClicked) {
-        console.log(`Row clicked with ID: ${id}`);
-        navigate(`/details/${id}`);
-    }
-    };
+        const isCheckboxClicked = event.target.type === 'checkbox';
+        const isDeleteIconClicked = event.target.closest('.text-red-500');
+        const isEditIconClicked = event.target.closest('.text-green-500');
+      
+        if (!isCheckboxClicked && !isDeleteIconClicked && !isEditIconClicked) {
+          console.log(`Row clicked with ID: ${id}`);
+          // Perform any desired actions when a row is clicked
+        }
+      };
     const parseDateString = (dateString) => {
         const [day,
             month,
@@ -74,9 +75,7 @@ function Table({
 
     const filterByName = (signal) => {
         if (nameSearch) {
-            const lowerCaseName = signal
-                .name
-                .toLowerCase();
+            const lowerCaseName = signal.nom_ar+signal.prenom_ar
             const lowerCaseSearch = nameSearch.toLowerCase();
             return lowerCaseName.includes(lowerCaseSearch);
         }
@@ -95,13 +94,13 @@ function Table({
     // Obtenir les signalements de la page actuelle
     const offset = currentPage * itemsPerPage;
     const filteredSignals = signalement.filter((signal) => ((fstate !== 'الكل'
-        ? signal.state === fstate
+        ? signal.statut === fstate
         : true) && (ftype !== 'الكل'
-        ? signal.type === ftype
+        ? signal.designationar === ftype
         : true) && (fadress !== 'الكل'
-        ? signal.adress === fadress
+        ? signal.adresse === fadress
         : true) && (fsource !== 'الكل'
-        ? signal.source === fsource
+        ? signal.localisationsignalement === fsource
         : true) && (filterByDate
         ? filterByDate(signal)
         : true) && filterByName(signal)));
@@ -111,11 +110,18 @@ function Table({
     // Calcul du nombre total de pages
     const pageCount = Math.ceil(filteredSignals.length / itemsPerPage);
 
+    const [isPopupVisible,
+        setIsPopupVisible] = useState(false);
+
+    const togglePopup = () => {
+        setIsPopupVisible(!isPopupVisible);
+    };
+
     return (
-        <div className="relative ">
+        <div className="relative min-h-screen overflow-hidden">
             <div className="shadow overflow-hidden border-b sm:rounded-lg">
 
-                <table className="min-w-full divide-y text-right">
+                <table className="min-w-full divide-y text-right overflow-hidden">
                     <thead className="bg-green-500 bg-opacity-20">
                         <tr className=" font-semibold">
                             <th scope="col" className="relative px-6 py-2">
@@ -171,57 +177,61 @@ function Table({
                     </thead>
                     <tbody className="bg-white divide-y-0">
                         {currentPageData.map((signal) => (
-                            <tr key={signal.id}
-                            className={`cursor-pointer transition duration-300 ${
-                              selectedRows.includes(signal.id) ? 'bg-gray-200 shadow-md' : 'hover:shadow-md'
-                            }`}
-                            onClick={(event) => handleRowClick(signal.id, event)}>
+                            <tr
+                                key={signal.id}
+                                className={`cursor-pointer transition duration-300 ${selectedRows.includes(signal.id)
+                                ? 'bg-gray-200 shadow-md'
+                                : 'hover:shadow-md'}`}
+                                onClick={(event) => handleRowClick(signal.id, event)}>
                                 <td className="px-1 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
-                                        <button type="button" className="text-red-500 hover:text-red-600">
+                                        <button
+                                            type="button"
+                                            className="text-red-500 hover:text-red-600"
+                                            onClick={togglePopup}>
                                             <Icon icon={deleteOutlineIcon}/>
                                         </button>
                                     </div>
                                 </td>
                                 <td className="px-1 py-1 whitespace-nowrap text-right text-sm font-medium">
-                                    {signal.state !== 'معالج' && (
+                                    {signal.statut !== 'معالج' && (
                                         <button type="button" className="text-green-500 hover:text-green-600">
                                             <Icon icon={editOutlineSharp}/>
                                         </button>
                                     )}
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
-                                    {signal.state === 'معالج' && (
+                                    {signal.statut === 'معالج' && (
                                         <span
                                             className="px-2 inline-flex text-xs leading-5 font-semibold text-[#59C55E]">
-                                            {signal.state}
+                                            {signal.statut}
                                         </span>
                                     )}
-                                    {signal.state === 'قيد المعالجة' && (
+                                    {signal.statut === 'قيد المعالجة' && (
                                         <span
                                             className="px-2 inline-flex text-xs leading-5 font-semibold text-[#F28123]">
-                                            {signal.state}
+                                            {signal.statut}
                                         </span>
                                     )}
                                     {signal.state === 'غير معالج' && (
                                         <span
                                             className="px-2 inline-flex text-xs leading-5 font-semibold text-[#F50032]">
-                                            {signal.state}
+                                            {signal.statut}
                                         </span>
                                     )}
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
-                                        {signal.source}
+                                        {signal.localisationsignalement}
                                     </div>
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
-                                        {signal.adress}
+                                        {signal.adresse}
                                     </div>
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
-                                    <div className="text-sm text-gray-900">{signal.type}</div>
+                                    <div className="text-sm text-gray-900">{signal.designationar}</div>
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
@@ -233,7 +243,7 @@ function Table({
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
-                                        {signal.name}
+                                        {signal.nom_ar+" "+signal.prenom_ar}
                                     </div>
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap text-right text-sm font-medium">
@@ -267,7 +277,28 @@ function Table({
                     ring-green-500" />
 
                 </div>
+                {isPopupVisible && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                        <div className="bg-white text-right p-8 rounded shadow">
+                            <h3 className="text-lg font-bold mb-4">تأكيد</h3>
+                            <p>هل أنت متأكد من مسح الاخطار
+                            </p>
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    className="bg-green-500 text-white py-2 px-4 rounded mr-2"
+                                    onClick={togglePopup}>
+                                    إلغاء
+                                </button>
+                                <button
+                                    className="bg-red-500 text-white py-2 px-4 rounded"
+                                    onClick={togglePopup}>
+                                    مسح الاخطار
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-          );
-        }
-    export default Table;
+               );
+            }
+        export default Table;
