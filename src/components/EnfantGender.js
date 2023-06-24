@@ -4,14 +4,14 @@ function EnfantGender({ statistique }) {
   // Calculate the total number of female and male children
   const totalFemales = statistique.reduce((acc, val) => {
     if (val.sexe === "أنثى") {
-      return acc + val.nombre_enfants;
+      return acc + parseInt(val.nombre_enfants);
     }
     return acc;
   }, 0);
 
   const totalMales = statistique.reduce((acc, val) => {
     if (val.sexe === "ذكر") {
-      return acc + val.nombre_enfants;
+      return acc + parseInt(val.nombre_enfants);
     }
     return acc;
   }, 0);

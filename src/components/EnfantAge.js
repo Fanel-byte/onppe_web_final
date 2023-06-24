@@ -49,7 +49,7 @@ function EnfantAge({ statistique }) {
       <div className="text-right text-xl font-bold mb-2 ">
         عدد الاطفال في خطر حسب الفئة العمرية
       </div>
-      <div className="flex  flex-row ml-2">
+      <div className="flex  flex-row-reverse ml-2">
         <div className="   w-1/3">
           <div className="   pl-10">
             <table className=" w-full h-40 text-center border-l border-r overflow-hidden border-green-400  ">
@@ -124,7 +124,7 @@ function EnfantAge({ statistique }) {
                     colSpan={2}
                   >
                     {" "}
-                    سنوات 0 - 6{" "}
+                    سنوات 7 - 13 {" "}
                   </th>
                 </tr>
                 <tr>
@@ -137,25 +137,16 @@ function EnfantAge({ statistique }) {
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                <tr className="border-green-400 ">
-                  <td className=" text-black border-b border-r border-green-400   pt-2 pb-2">
-                    {parseInt(totalsByGenderFirst.male)}
-                  </td>
-                  <td className=" text-black border-b border-green-400  pt-2 pb-2">
-                    {parseInt(totalsByGenderFirst.female)}
-                  </td>
+                    {/* row 1 */}
+                    <tr className="border-green-400  ">
+                <td className=" text-black border-b border-r border-green-400 pt-2 pb-2">{parseInt(totalsByGenderSecond.male)}</td>
+                <td className=" text-black border-b border-green-400 pt-2 pb-2">{parseInt(totalsByGenderSecond.female)}</td>
                 </tr>
-                {/* row 2*/}
-                <tr className="border-green-400 ">
-                  <td
-                    className=" text-black border-b border-r border-green-400 pt-2 pb-2"
-                    colSpan={2}
-                  >
-                    {parseInt(totalsByGenderFirst.female) +
-                      parseInt(totalsByGenderFirst.male)}
-                  </td>
+                 {/* row 2*/}
+                 <tr className="border-green-400 pt-2 pb-2 ">
+                <td className=" text-black border-b border-r border-green-400 pt-2 pb-2" colSpan={2}>{parseInt(totalsByGenderSecond.female) + parseInt(totalsByGenderSecond.male)}</td>
                 </tr>
+
               </tbody>
             </table>
           </div>
@@ -179,7 +170,7 @@ function EnfantAge({ statistique }) {
                     colSpan={2}
                   >
                     {" "}
-                    سنوات 0 - 6{" "}
+                    سنوات 14 - 19  {" "}
                   </th>
                 </tr>
                 <tr>
@@ -195,10 +186,10 @@ function EnfantAge({ statistique }) {
                 {/* row 1 */}
                 <tr className="border-green-400 ">
                   <td className=" text-black border-b border-r border-green-400   pt-2 pb-2">
-                    {parseInt(totalsByGenderFirst.male)}
+                    {parseInt(totalsByGenderThird.male)}
                   </td>
                   <td className=" text-black border-b border-green-400  pt-2 pb-2">
-                    {parseInt(totalsByGenderFirst.female)}
+                    {parseInt(totalsByGenderThird.female)}
                   </td>
                 </tr>
                 {/* row 2*/}
@@ -207,8 +198,8 @@ function EnfantAge({ statistique }) {
                     className=" text-black border-b border-r border-green-400 pt-2 pb-2"
                     colSpan={2}
                   >
-                    {parseInt(totalsByGenderFirst.female) +
-                      parseInt(totalsByGenderFirst.male)}
+                    {parseInt(totalsByGenderThird.female) +
+                      parseInt(totalsByGenderThird.male)}
                   </td>
                 </tr>
               </tbody>
