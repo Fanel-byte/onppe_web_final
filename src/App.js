@@ -28,9 +28,10 @@ const App = () => {
                 </div>
                 <Routes>
                   <Route path="main" element={<Main />} />
-                  <Route path="details" element={<Details />} />
+                  <Route path="details/:id" element={<Details />} />
                   <Route path="Signalement" element={<Dashboard />} />
                   <Route path="AddSignalement" element={<AddSignalement />} />
+
                   <Route
                     path="StatistiqueEnfants"
                     element={<StatsEnfants />}

@@ -2,8 +2,19 @@ import React from "react";
 import Graph from "../components/Graph";
 import SourceSignalStats from "../components/SourceSignalStats";
 import CauseSignalStats from "../components/CauseSignalStats";
+import {useEffect,useState} from 'react';
+import axios from 'axios';
 
 export default function StatsEnfants() {
+  const [statistique, setStatistique] = useState([])
+  useEffect(() => {
+      axios.get('http://localhost:4000/enfants/getEnfantsStats').then((response) => {
+          setStatistique(response.data)
+      })
+
+  }, [])
+
+
   return (
     <div flex flex-col>
       <div className="StatsSinalements flex flex-wrap flex-row-reverse mr-5 ml-5 mt-2 ">

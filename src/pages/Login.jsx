@@ -31,7 +31,10 @@ export default function Login() {
     }
   
   return (
+
+
     <div className="card w-96 bg-base-10 shadow-xl mx-auto mt-5 bg-white">
+
       <div className="card-body mx-auto">
         <img className="mx-auto w-24 h-24" src={logo} alt="Logo" />
         <h1 className="card-title mx-auto">مرحبا بكم</h1>
@@ -84,4 +87,7 @@ export default function Login() {
       </div>
     </div>
   );
+
+
+
 }

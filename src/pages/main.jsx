@@ -3,9 +3,17 @@ import TaskCard from "../components/TaskCard";
 import SignalmentMainCard from "../components/SignalmentMainCard"
 import CardView from "../components/CardView.js";
 import Article from "../components/Article";
+import TableDoublons from '../components/TableDoublons';
+
 function main() {
   return (
-    
+
+
+    <div>
+        <TableDoublons idsignal={1}/>
+
+    </div>
+    /*
     <div className="flex flex-col justify-start items-end overflow-hidden mr-4 ml-4">
   <div className="mt-4 mb-2">
         <h1 className="text-2xl font-bold">لوحة القيادة</h1>
@@ -45,6 +53,6 @@ function main() {
     </div >
 
 
-  );
+  */);
 }
 export default main;

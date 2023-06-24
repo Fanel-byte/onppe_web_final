@@ -1,6 +1,19 @@
 import React from "react";
+import {useEffect,useState} from 'react';
+import axios from 'axios';
 
 function SourceSignalStats() {
+    const [statistiques, setStatistiques] = useState({});
+  
+    useEffect(() => {
+      axios.get('http://localhost:4000/signalement/getNumberSignalementsBySource/تطبيق الهاتف')
+        .then((response) => {
+          setStatistiques(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, []);
   return (
     <div className="shadow border-gray-500 mr-5 ml-5 mt-2 pt-5 pb-4 pr-5 rounded-md w-1/2">
       <h2 className="text-xl text-right font-semibold mb-2">
@@ -23,7 +36,7 @@ function SourceSignalStats() {
                 <tbody>
                   {/* row 1 */}
                   <tr>
-                    <td>200</td>
+                    <td>{statistiques.رقم}</td>
                   </tr>
                 </tbody>
               </table>
@@ -45,7 +58,7 @@ function SourceSignalStats() {
                 <tbody>
                   {/* row 1 */}
                   <tr>
-                    <td>200</td>
+                    <td>{statistiques.source1}</td>
                   </tr>
                 </tbody>
               </table>
@@ -65,7 +78,7 @@ function SourceSignalStats() {
                 <tbody>
                   {/* row 1 */}
                   <tr>
-                    <td>200</td>
+                    <td>{statistiques.source1}</td>
                   </tr>
                 </tbody>
               </table>

@@ -4,7 +4,7 @@ import {Icon} from '@iconify/react';
 import {getSignalements} from './TabDB';
 import deleteOutlineIcon from '@iconify-icons/material-symbols/delete-outline';
 import editOutlineSharp from '@iconify-icons/material-symbols/edit-outline-sharp';
-
+import { useNavigate } from 'react-router-dom';
 function Table({
     fstate,
     ftype,
@@ -14,6 +14,7 @@ function Table({
     fdateto,
     nameSearch
 }) {  
+    const navigate = useNavigate();
     const [signalements, setSignalements] = useState([]);
     useEffect(() => {
         getSignalements()
@@ -32,6 +33,7 @@ function Table({
       
         if (!isCheckboxClicked && !isDeleteIconClicked && !isEditIconClicked) {
           console.log(`Row clicked with ID: ${id}`);
+          navigate(`/details/${id}`);
           // Perform any desired actions when a row is clicked
         }
       };
@@ -156,7 +158,7 @@ function Table({
                             <tr
                                 key={signal.signalementId}
                                 className="cursor-pointer transition duration-300 hover:shadow-md"
-                                onClick={(event) => handleRowClick(signal.signalementId, event)}>
+                                onClick={(event) => handleRowClick(signal.signalementid, event)}>
                               
                                 <td className="px-1 py-1 whitespace-nowrap text-right text-sm font-medium">
                                     {signal.statut !== 'معالج' && (
