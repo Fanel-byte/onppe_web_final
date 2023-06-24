@@ -5,6 +5,7 @@ import CardView from "../components/CardView.js";
 import Article from "../components/Article";
 function main() {
   return (
+    
     <div className="flex flex-col justify-start items-end overflow-hidden mr-4 ml-4">
   <div className="mt-4 mb-2">
         <h1 className="text-2xl font-bold">لوحة القيادة</h1>
