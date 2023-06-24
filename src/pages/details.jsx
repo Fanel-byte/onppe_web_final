@@ -14,7 +14,8 @@ import PopupBox from '../components/PopupBox';
 
 export default function Details() {
    
-      
+    const navigate = useNavigate();
+
     const { id } = useParams();
     const [signalement, Setsignalement] = useState([]);
     const [enfant, Setenfant] = useState([]);
