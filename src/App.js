@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import AddSignalement from "./pages/AddSignalement";
 import StatsEnfants from "./pages/StatsEnfants";
 import StatsSignalement from "./pages/StatsSignalement";
+import StatsSignaleur from "./pages/StatsSignaleur";
 
 const App = () => {
   return (
@@ -39,6 +40,10 @@ const App = () => {
                   <Route
                     path="StatsSignalement"
                     element={<StatsSignalement />}
+                  />
+                     <Route
+                    path="StatsSignaleur"
+                    element={<StatsSignaleur />}
                   />
                 </Routes>
               </div>

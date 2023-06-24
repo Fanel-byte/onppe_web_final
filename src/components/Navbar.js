@@ -121,7 +121,7 @@ function Navbar() {
                   </Link>
                 </li>
                 <li className=" mb-4 text-gray-600 hover:text-CustomGreen flex  justify-end items-center px-4 ">
-                  <Link to="Signalement"
+                  <Link to="StatsSignaleur"
                                      className="flex items-center text-gray-600 hover:text-CustomGreen text-lg">
 
                     <a>إحصائيات المبلغين</a>
