@@ -7,12 +7,7 @@ import axios from 'axios';
 
 export default function StatsEnfants() {
   const [statistique, setStatistique] = useState([])
-  useEffect(() => {
-      axios.get('http://localhost:4000/enfants/getEnfantsStats').then((response) => {
-          setStatistique(response.data)
-      })
 
-  }, [])
 
 
   return (
@@ -33,7 +28,7 @@ export default function StatsEnfants() {
       <div className="flex flex-col">
 
       <div className="flex flex-row">
-      <SourceSignalStats />
+      <SourceSignalStats/>
 
         <Graph />
 
