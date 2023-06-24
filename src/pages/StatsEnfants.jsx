@@ -4,7 +4,7 @@ import EnfantAge from "../components/EnfantAge";
 import axios from "axios";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
+import { font } from "./Amiri-Regular-normal";
 
 export default function StatsEnfants() {
     const [statistique, setStatistique] = useState([])
@@ -16,57 +16,106 @@ export default function StatsEnfants() {
     }, [])
 
     const handleExportPDF = () => {
-
         const doc = new jsPDF();
+
         // Load and register the font
-        /*
         const AmiriRegular = font.trim();
 
         doc.addFileToVFS('Amiri-Regular.ttf', AmiriRegular);
         doc.addFont('Amiri-Regular.ttf', 'Amiri', 'normal');
 
-        doc.setFont('Amiri'); // set font
+        doc.setFont('Amiri'); // Set font
         doc.setFontSize(20);
-        doc.text("عدد الاطفال في خطر حسب الفئة العمرية", 15, 15);
+        doc.setFontSize(16);
+        doc.text("عدد الاطفال في خطر حسب الجنس", 15, 15);
 
-        doc.addPage();
-        doc.setFontSize(16);
-        doc.text("Table 1: Enfants par Age", 15, 15);
-        doc.setFont('Amiri'); // set font for the table
-        doc.setFontSize(16);
-        doc.autoTable({
-            startY: 25,
-            head: [["العمر", "عدد الأطفال"]],
-            body: statistique.map((stat) => [stat.tranche_age, stat.nombre_enfants]),
-            didDrawCell: (data) => {
-                // Set font for each cell
-                const { cell, column, row } = data;
-                if (column.index === 0 || column.index === 1) {
-                    doc.setFont('Amiri');
-                    doc.setTextColor(0, 0, 0); // Set color to black
+
+        const totalFemales = statistique.reduce((acc, val) => {
+            if (val.sexe === "أنثى") {
+                return acc + parseInt(val.nombre_enfants);
+            }
+            return acc;
+        }, 0);
+
+        const totalMales = statistique.reduce((acc, val) => {
+            if (val.sexe === "ذكر") {
+                return acc + parseInt(val.nombre_enfants);
+            }
+            return acc;
+        }, 0);
+        const totalsByGenderFirst = statistique.reduce((acc, val) => {
+            if (val.tranche_age === "0-6") {
+                if (val.sexe === "ذكر") {
+                    acc.male += parseInt(val.nombre_enfants);
+                } else if (val.sexe === "أنثى") {
+                    acc.female += parseInt(val.nombre_enfants);
                 }
             }
-        });
+            return acc;
+        }, { male: 0, female: 0 });
+        const table1Data = [
+            ["الجنس", "عدد الاطفال"],
+            ["ذكر", totalMales.toString()],
+            ["أنثى", totalFemales.toString()],
+        ];
+        drawTable(25, table1Data);
 
         doc.addPage();
-        doc.text("Table 2: Statistique Enfant Tranche d'age", 15, 15);
-        doc.setFont('Amiri'); // set font for the table
         doc.setFontSize(16);
-        doc.autoTable({
-            startY: 25,
-            head: [["Age", "Nombre d'enfants"]],
-            body: statistique.map((stat) => [stat.tranche_age, stat.nombre_enfants]),
-        });
-        doc.setFont('Amiri'); // set font for the table
-        doc.setFontSize(16);
-        doc.autoTable({
-            startY: 25,
-            head: [["Tranche d'age", "Sexe", "Nombre d'enfants"]],
-            body: statistique.map((stat) => [stat.tranche_age, stat.sexe, stat.nombre_enfants]),
+        doc.text("عدد الاطفال في خطر حسب الفئة العمرية", 15, 15);
+
+        const ageRanges = ["0-6", "7-13", "14-19"];
+
+        const table2Data = ageRanges.map((range) => {
+            const totalsByGender = statistique.reduce((acc, val) => {
+                if (val.tranche_age === range) {
+                    if (val.sexe === "ذكر") {
+                        acc.male += parseInt(val.nombre_enfants);
+                    } else if (val.sexe === "أنثى") {
+                        acc.female += parseInt(val.nombre_enfants);
+                    }
+                }
+                return acc;
+            }, { male: 0, female: 0 });
+            const total = parseInt(totalsByGender.male + totalsByGender.female);
+
+
+            return [range, totalsByGender.male.toString(), totalsByGender.female.toString(), total.toString()];
         });
 
+        const columnNames = ["الفئة العمرية", "ذكر", "أنثى", "مجموع"];
+        table2Data.unshift(columnNames); // Add column names as the first row of the table
+
+        drawTable(25, table2Data);
+
+        drawTable(25, table2Data);
+
         // Save the PDF
-        doc.save("statistiques.pdf");*/
+        doc.save("statistiques.pdf");
+
+        function drawTable(startY, data) {
+            const margin = 10;
+            const columnCount = data[0].length;
+            const columnWidth = (doc.internal.pageSize.getWidth() - 2 * margin) / columnCount;
+            const rowHeight = 20;
+
+            doc.setFontSize(12);
+            doc.setFillColor(255, 255, 255); // Set cell background color to white
+
+            for (let i = 0; i < data.length; i++) {
+                const rowData = data[i];
+
+                for (let j = 0; j < columnCount; j++) {
+                    const cellValue = rowData[j];
+                    const cellX = margin + j * columnWidth;
+                    const cellY = startY + (i + 1) * rowHeight;
+
+                    doc.rect(cellX, cellY, columnWidth, rowHeight, 'S');
+                    doc.text(cellValue, cellX + 5, cellY + 15);
+                }
+            }
+        }
+
     };
     return (
         <div flex flex-col>
