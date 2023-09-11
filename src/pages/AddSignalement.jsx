@@ -2,115 +2,124 @@ import React, {useEffect, useState} from 'react';
 import Axios from 'axios';
 import {format} from 'date-fns';
 import locale from 'date-fns/locale/ar-SA'; // Importez la localisation arabe de votre choix
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AddSignalement() {
 
-    //infos to fill
-    const [prenom,
-        Setprenom] = useState('');
-    const [prenomsignaleur,
-        Setprenomsignaleur] = useState('');
-    const [prenompere,
-        Setprenompere] = useState('');
-    const [prenommere,
-        Setprenommere] = useState('');
-    const [nom,
-        Setnom] = useState('');
-    const [numero,
-        Setnumero] = useState('');
-    const [nomsignaleur,
-        Setnomsignaleur] = useState('');
-    const [sexe,
-        Setsexe] = useState("ذكر");
-    const [sexesignaleur,
-        Setsexesignaleur] = useState("ذكر");
-    const [age,
-        Setage] = useState('');
-    const [adresse,
-        Setadresse] = useState('');
-    const [adresseenfant,
-        Setadresseenfant] = useState('');
-    const [wilayacode,
-        Setwilayaid] = useState('1');
-    const [situationparent,
-        Setrelation] = useState("متزوجان");
-    const [dateincident] = useState(new Date());
-    const [descriptif,
-        Setdescriptif] = useState('');
-    const [typesignaleurid,
-        Settypesignaleurid] = useState('1');
-    const [motifid,
-        Setmotif] = useState('1');
-    const [childid,
-        setchildid] = useState('');
-    const [signaleurid,
-        setsignaleurid] = useState('');
-    const [path,
-        setpath] = useState('');
-    const [signalementid,
-        setsignalementid] = useState('');
-
-        function handleFileUpload(event) {
-            setpath(event.target.files[0]); // Get the selected file
-            // Perform any necessary operations with the file, such as uploading to a server
-            console.log('Selected file:', path);
-          }
-
+        //infos to fill
+        const [prenom,
+            Setprenom] = useState('');
+        const [prenomsignaleur,
+            Setprenomsignaleur] = useState('');
+        const [prenompere,
+            Setprenompere] = useState('');
+        const [prenommere,
+            Setprenommere] = useState('');
+        const [nom,
+            Setnom] = useState('');
+        const [numero,
+            Setnumero] = useState('');
+        const [nomsignaleur,
+            Setnomsignaleur] = useState('');
+        const [sexe,
+            Setsexe] = useState("ذكر");
+        const [sexesignaleur,
+            Setsexesignaleur] = useState("ذكر");
+        const [age,
+            Setage] = useState('');
+        const [adresse,
+            Setadresse] = useState('');
+        const [adresseenfant,
+            Setadresseenfant] = useState('');
+        const [wilayacode,
+            Setwilayaid] = useState('1');
+        const [situationparent,
+            Setrelation] = useState("متزوجان");
+        const [dateincident] = useState(new Date());
+        const [descriptif,
+            Setdescriptif] = useState('');
+        const [typesignaleurid,
+            Settypesignaleurid] = useState('1');
+        const [motifid,
+            Setmotif] = useState('1');
+        const [childid,
+            setchildid] = useState('');
+        const [signaleurid,
+            setsignaleurid] = useState('');
+        const [path,
+            setpath] = useState('');
+        const [signalementid,
+            setsignalementid] = useState('');
+    
+            function handleFileUpload(event) {
+                setpath(event.target.files[0]); // Get the selected file
+                // Perform any necessary operations with the file, such as uploading to a server
+                console.log('Selected file:', path);
+              }
+              let idCounter = 400; // Initialize the ID counter
+    
+    
     const submitchild = () => {
-        Axios
-            .post('http://localhost:4000/enfants/create', {
-
-            prenom: prenom,
-            nom: nom,
-            adresse: adresseenfant,
-            sexe: sexe,
-            age: age,
-            wilayacode: wilayacode,
-            situationparent: situationparent,
-            pereprenom: prenompere,
-            mereprenom: prenommere
-        })
-            .then((response) => {
-                alert('Child information successfully created');
-                setchildid(response.data.id);
-            })
+      Axios.post('http://localhost:4000/enfants/create', {
+        prenom: prenom,
+        nom: nom,
+        adresse: adresseenfant,
+        sexe: sexe,
+        age: age,
+        wilayacode: wilayacode,
+        situationparent: situationparent,
+        pereprenom: prenompere,
+        mereprenom: prenommere
+      })
+      .then((response) => {
+        setchildid(response.data);
+        console.log("childid"+response.data)
+      });
     };
     
     const submitsignaleur = () => {
-        Axios
-            .post('http://localhost:4000/citoyen/create', {
-
-            prenom: prenomsignaleur,
-            nom: nomsignaleur,
-            sexe: sexesignaleur,
-            tel: numero
+        const charId = uuidv4(); // Generate a unique UUID
+        
+        Axios.post('http://localhost:4000/citoyen/create', {
+          prenom: prenomsignaleur,
+          nom: nomsignaleur,
+          sexe: sexesignaleur,
+          tel: numero,
+          id: charId
         })
-            .then((response) => {
-                alert('citizen information successfully created');
-                setsignaleurid(response.data.id);
-            })
+        .then((response) => {
+          submitsignalement(response.data,childid); // Pass the citizen ID to submitsignalement
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      };
+      const submitsignalement = (signaleurid,childid) => {
+      Axios.post('http://localhost:4000/signalement/create', {
+        descriptif: descriptif,
+        dateincident: dateincident,
+        typesignaleurid: typesignaleurid,
+        motifid: motifid,
+        enfantid: childid, // Use "enfantId" instead of "enfantid"
+        adresse: adresse,
+        citoyenid: signaleurid // Use the passed citoyenId as signaleurid
+      })
+      .then((response) => {
+       
+        alert('Signalement successfully created');
+        setsignalementid(response.data.id);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     };
-    useEffect(() => {
-        if (childid && signaleurid) {
-            Axios
-                .post('http://localhost:4000/signalement/create', {
-                descriptif: descriptif,
-                dateincident: dateincident,
-                typesignaleurid: typesignaleurid,
-                motifid: motifid,
-                enfantid: childid,
-                adresse: adresse,
-                citoyenid: signaleurid
-            })
-                .then((response) => {
-                    alert('Signalement successfully created');
-                    setsignalementid(response.data.id)
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+    
+      
+      useEffect(() => {
+        if (signaleurid) {
+          submitsignalement(signaleurid); // Call submitsignalement directly with signaleurid
         }
-    }, [
+      }, [
         childid,
         descriptif,
         dateincident,
@@ -118,26 +127,29 @@ export default function AddSignalement() {
         motifid,
         signaleurid,
         adresse
-    ]);
-    useEffect(() => {
-        if (signalementid) {
-            console.log('diri geste xD');
-            Axios.post('http://localhost:4000/images/add', {
-
-                image: {
-                    "description": "vide",
-                    "signalementid": signalementid
-                },
-                path: path
-            }).then(() => {
-                alert('img information successfully created');
-            })
+      ]);
+      
+    
+              
+        useEffect(() => {
+            if (signalementid) {
+                console.log('diri geste xD');
+                Axios.post('http://localhost:4000/images/add', {
+    
+                    image: {
+                        "description": "vide",
+                        "signalementid": signalementid
+                    },
+                    path: path
+                }).then(() => {
+                    alert('img information successfully created');
+                })
+            }
+        }, [signalementid, path]);
+    
+        function formatDate(date) {
+            return format(new Date(date), 'dd MMMM yyyy', {locale});
         }
-    }, [signalementid, path]);
-
-    function formatDate(date) {
-        return format(new Date(date), 'dd MMMM yyyy', {locale});
-    }
 
     return (
 

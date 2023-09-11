@@ -31,11 +31,10 @@ function Table({
         const isDeleteIconClicked = event.target.closest('.text-red-500');
         const isEditIconClicked = event.target.closest('.text-green-500');
       
-        if (!isCheckboxClicked && !isDeleteIconClicked && !isEditIconClicked) {
           console.log(`Row clicked with ID: ${id}`);
           navigate(`/details/${id}`);
           // Perform any desired actions when a row is clicked
-        }
+        
       };
     const parseDateString = (dateString) => {
         const [day,

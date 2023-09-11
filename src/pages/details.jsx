@@ -35,6 +35,7 @@ export default function Details() {
   useEffect(() => {
     Axios.get(`http://localhost:4000/enfants/getEnfantById${enfantid}`).then((response) => {
       Setenfant(response.data);
+      console.log(response.data)
     });
   }, [enfantid]);
 
