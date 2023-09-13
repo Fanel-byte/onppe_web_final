@@ -57,12 +57,20 @@ function Table({
 
     const filterByName = (signal) => {
         if (nameSearch) {
-            const lowerCaseName = signal.nomenfant+signal.prenomenfant+signal.nomcitoyen+signal.prenomcitoyen;
+            // Use default empty strings for properties that may be null or undefined
+            const nomenfant = signal.nomenfant || "";
+            const prenomenfant = signal.prenomenfant || "";
+            const nomcitoyen = signal.nomcitoyen || "";
+            const prenomcitoyen = signal.prenomcitoyen || "";
+    
+            const lowerCaseName = (nomenfant + prenomenfant + nomcitoyen + prenomcitoyen).toLowerCase();
             const lowerCaseSearch = nameSearch.toLowerCase();
+            
             return lowerCaseName.includes(lowerCaseSearch);
         }
         return true;
     };
+    
 
     const [currentPage,
         setCurrentPage] = useState(0);

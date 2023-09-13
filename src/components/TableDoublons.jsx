@@ -34,16 +34,15 @@ function TableDoublons({idsignal}) {
 
   //  console.log(thissignal);
 
-    const filterByName = (signal) => {
-        if (thissignal.nomenfant) {
-            const lowerCaseName = signal.nomenfant;
-            const lowerCaseSearch = thissignal
-                .nomenfant
-                .toLowerCase();
-            return lowerCaseName.includes(lowerCaseSearch);
-        }
-        return true;
-    };
+  const filterByName = (signal, thissignal) => {
+    if (signal.nomenfant && thissignal && thissignal.nomenfant) {
+        const lowerCaseName = signal.nomenfant.toLowerCase();
+        const lowerCaseSearch = thissignal.nomenfant.toLowerCase();
+        return lowerCaseName.includes(lowerCaseSearch);
+    }
+    return true;
+};
+
 
     const filterBySurname = (signal) => {
         if (signal.prenomenfant) {
