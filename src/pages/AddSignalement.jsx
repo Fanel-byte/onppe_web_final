@@ -51,11 +51,12 @@ export default function AddSignalement() {
         const [signalementid,
             setsignalementid] = useState('');
     
-            function handleFileUpload(event) {
-                setpath(event.target.files[0]); // Get the selected file
-                // Perform any necessary operations with the file, such as uploading to a server
+            const handleFileUpload = (e) => {
+                setpath(e.target.files[0]);
                 console.log('Selected file:', path);
-              }
+              };
+              
+            
               let idCounter = 400; // Initialize the ID counter
     
     
@@ -73,6 +74,7 @@ export default function AddSignalement() {
       })
       .then((response) => {
         setchildid(response.data);
+        submitsignaleur();
         console.log("childid"+response.data)
       });
     };
@@ -88,12 +90,14 @@ export default function AddSignalement() {
           id: charId
         })
         .then((response) => {
-          submitsignalement(response.data,childid); // Pass the citizen ID to submitsignalement
+          setsignaleurid(response.data);  
+          console.log("signaleurid"+response.data);  
         })
         .catch((error) => {
           console.error(error);
         });
       };
+
       const submitsignalement = (signaleurid,childid) => {
       Axios.post('http://localhost:4000/signalement/create', {
         descriptif: descriptif,
@@ -102,50 +106,39 @@ export default function AddSignalement() {
         motifid: motifid,
         enfantid: childid, // Use "enfantId" instead of "enfantid"
         adresse: adresse,
-        citoyenid: signaleurid // Use the passed citoyenId as signaleurid
+        citoyenid: signaleurid, // Use the passed citoyenId as signaleurid
+        source: "عن طريق المنصة الرقمية",
+        statut: "غير معالج"
       })
       .then((response) => {
        
+        console.log("signalementid"+response.data);
+
         alert('Signalement successfully created');
-        setsignalementid(response.data.id);
+        setsignalementid(response.data)
       })
       .catch((error) => {
-        console.error('Error:', error);
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+        } else {
+          console.error('Error:', error.message);
+        }
       });
+      
     };
     
       
       useEffect(() => {
         if (signaleurid) {
-          submitsignalement(signaleurid); // Call submitsignalement directly with signaleurid
+          submitsignalement(signaleurid,childid); // Call submitsignalement directly with signaleurid
         }
-      }, [
-        childid,
-        descriptif,
-        dateincident,
-        typesignaleurid,
-        motifid,
-        signaleurid,
-        adresse
-      ]);
+      }, [signaleurid]
+      );
       
     
               
-        useEffect(() => {
-            if (signalementid) {
-                console.log('diri geste xD');
-                Axios.post('http://localhost:4000/images/add', {
-    
-                    image: {
-                        "description": "vide",
-                        "signalementid": signalementid
-                    },
-                    path: path
-                }).then(() => {
-                    alert('img information successfully created');
-                })
-            }
-        }, [signalementid, path]);
+      
     
         function formatDate(date) {
             return format(new Date(date), 'dd MMMM yyyy', {locale});
@@ -552,8 +545,8 @@ export default function AddSignalement() {
                         className="bg-gray-50 border border-yellow-300 text-white-900 text-xl rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-5  dark:border-gray-600  dark:text-indigo-950 "/>
                 </div>
 
-                <div className="flex items-center justify-center mb-10 mx-10">
-                    <label
+                {/* <div className="flex items-center justify-center mb-10 mx-10">
+                     <label
                         htmlFor="dropzone-file"
                         className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-100/80 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-transparent">
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -575,13 +568,12 @@ export default function AddSignalement() {
                         </div>
                         <input id="dropzone-file" type="file" className="hidden" onChange={handleFileUpload} // Add the onChange event handler
                         />
-                    </label>
-                </div>
+                    </label> 
+                </div> */}
                 <center>
                     <button
                         onClick={() => {
                         submitchild();
-                        submitsignaleur();
                     }}
                         type="button"
                         className="flex justify-center focus:outline-none bg-green-500 text-white focus:ring-green-300 font-medium rounded-lg text-lg px-5 py-2.5 mr-2 mb-2 w-1/3 dark:bg-green-500 dark:hover:bg-green-600">

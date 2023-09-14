@@ -80,7 +80,7 @@ function Table({
         : true) && (ftype !== 'الكل'
         ? signal.motif === ftype
         : true) && (fadress !== 'الكل'
-        ? signal.enfantadresse === fadress
+        ? signal.wilaya === fadress
         : true) && (fsource !== 'الكل'
         ? signal.source === fsource
         : true) && (filterByDate
@@ -193,7 +193,7 @@ function Table({
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
                                     <div className="text-sm font-medium text-gray-900">
-                                        {signal.enfantadresse}
+                                        {signal.wilaya}
                                     </div>
                                 </td>
                                 <td className="px-6 py-1 whitespace-nowrap">
