@@ -15,21 +15,26 @@ export default function Login() {
   };
 
   const handleLogin = async () => {
-    
-      axios.post('http://localhost:4000/auth/login', { 
-        email: username, 
-        motdepasse: password 
-      }).then(()=> {
-        navigate("main")
-
-      } 
-      
-      )
-      .catch ((error) => {
-        console.error('Erreur lors de la connexion :', error);
+    try {
+      const response = await axios.post('http://localhost:4000/auth/login', {
+        email: username,
+        motdepasse: password,
       });
+      if (response.status === 200) {
+        const { username } = response.data;
+        setUsername(username); // Set the username in the local state
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('username', username);
+        navigate('main');
+
+      }
+      else {
+        console.error('Unexpected response:', response);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la connexion :', error);
     }
-  
+  }
   return (
 
 
@@ -40,7 +45,7 @@ export default function Login() {
         <h1 className="card-title mx-auto">مرحبا بكم</h1>
 
         <label className="font-montserrat">
-          Nom /اسم المستخدم
+          Email /العنوان الالكتروني
           <input
             type="text"
             className="input input-bordered w-full max-w-xs"
