@@ -12,6 +12,7 @@ import PopupBox from '../components/PopupBox';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { font } from './Amiri-Regular-normal.js';
+import ReactPlayer from 'react-player';
 
 export default function Details() {
 
@@ -21,6 +22,8 @@ export default function Details() {
   const [signalement, Setsignalement] = useState([]);
   const [enfant, Setenfant] = useState([]);
   const [img, Setimg] = useState([]);
+  const [vid, Setvid] = useState([]);
+
   const [cit, Setcit] = useState([]);
 
   useEffect(() => {
@@ -48,6 +51,14 @@ export default function Details() {
   const imagePath = img.length > 0 ? img[0].path : "";
   const imagedescription = img.length > 0 ? img[0].description : "";
 
+  useEffect(() => {
+    Axios.get(`http://localhost:4000/videos/getVideoBySignalementId/${id}`).then((response) => {
+
+      Setvid(response.data);
+    });
+  }, [id]);
+  const videoPath = vid.length > 0 ? vid[0].path : "";
+  const videodescription = vid.length > 0 ? vid[0].description : "";
 
   const citoyenid = signalement.citoyenid;
 
@@ -218,17 +229,16 @@ export default function Details() {
                           </div>
                         </div>
 
-
-                        <div class="relative group ml-3">
-
-                          <img class="w-full h-full object-cover rounded-lg shadow-md transition-all duration-500 group-hover:brightness-50 group-hover:contrast-125" src={`http://localhost:4000/${imagePath}`} alt={imagedescription} />
-                          <div class="absolute inset-0 bg-black transition-opacity duration-500 opacity-0 group-hover:opacity-70"></div>
-
-                          <div class="absolute inset-0 flex flex-col items-center justify-center px-9 text-center text-white transition-all duration-500 opacity-0 group-hover:opacity-100">
-
-                            <p class="mb-3 text-lg italic">{imagedescription}</p>
-                          </div>
-                        </div>
+                        <div>
+      {/* Your video player component or HTML video element */}
+      <ReactPlayer
+  url={`http://localhost:4000/${videoPath}`}
+  controls={true}
+  width="400px"
+  height="225px"
+/>
+      <p>{videodescription}</p>
+    </div>
 
 
                       </div>

@@ -19,13 +19,15 @@ function Table({
     useEffect(() => {
         getSignalements()
           .then((data) => {
+            // Sort the data by date in descending order (newest first)
+            data.sort((a, b) => parseDateString(b.date) - parseDateString(a.date));
             setSignalements(data);
           })
           .catch((error) => {
             console.error('Failed to fetch signalements:', error);
           });
-      }, []);
-  
+    }, []);
+    
     const handleRowClick = (id, event) => {
         const isCheckboxClicked = event.target.type === 'checkbox';
         const isDeleteIconClicked = event.target.closest('.text-red-500');
